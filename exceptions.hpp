@@ -9,54 +9,54 @@ using std::string;
 
 class Exception : public std::exception {
 public:
-   Exception(const char* msg = "Error") : e_msg{msg} {}
-  ~Exception( ) {}
+   Exception(const char* msg = "Error");
+  ~Exception( );
 
-   virtual const char* what( ) const throw () {return(e_msg);}
+   virtual const char* what( ) const throw();
 protected:
    const char* e_msg;
 };
 
 class MissingParamException : public Exception {
 public:
-   MissingParamException(const char* msg = "MissingParamException")  : Exception{msg} {}
-  ~MissingParamException( ) {}
+   MissingParamException(const char* msg = "MissingParamException");
+  ~MissingParamException( );
 };
 
 class NotANumber : public Exception {
 public:
-   NotANumber(const char* msg = "NotANumber")  : Exception{msg} {}
-  ~NotANumber( ) {}
+   NotANumber(const char* msg = "NotANumber");
+  ~NotANumber( );
 };
 
 class NotAString : public Exception {
 public:
-   NotAString(const char* msg = "NotAString")  : Exception{msg} {}
-  ~NotAString( ) {}
+   NotAString(const char* msg = "NotAString");
+  ~NotAString( );
 };
 
 class InvalidLambdaExpression : public Exception {
 public:
-   InvalidLambdaExpression(const char* msg = "InvalidLambdaExpression")  : Exception{msg} {}
-  ~InvalidLambdaExpression( ) {}
+   InvalidLambdaExpression(const char* msg = "InvalidLambdaExpression");
+  ~InvalidLambdaExpression( );
 };
 
 class UnmatchingParenthesis : public Exception {
 public:
-   UnmatchingParenthesis(const char* msg = "UnmatchingParenthesis")  : Exception{msg} {}
-  ~UnmatchingParenthesis( ) {}
+   UnmatchingParenthesis(const char* msg = "UnmatchingParenthesis");
+  ~UnmatchingParenthesis( );
 };
 
 class NotALambda : public Exception {
 public:
-   NotALambda(const char* msg = "NotALambda")  : Exception{msg} {}
-  ~NotALambda( ) {}
+   NotALambda(const char* msg = "NotALambda");
+  ~NotALambda( );
 };
 
 class NotAnAtom : public Exception {
 public:
-   NotAnAtom(const char* msg = "NotAnAtom")  : Exception{msg} {}
-  ~NotAnAtom( ) {}
+   NotAnAtom(const char* msg = "NotAnAtom");
+  ~NotAnAtom( );
 };
 
 #endif
