@@ -259,3 +259,26 @@ Part* listEvaluate(std::string str) {
 
 	return result;
 }
+
+void run(std::string input) {
+	vector<Part*> parts;
+	try {
+		parts = parse(input);
+		for(Part* part : parts) {
+			if(part != nullptr) {
+				Part* value = part->evaluate();
+				std::cout << value->getVal() << std::endl;
+				delete value;
+			}
+		}
+
+	} catch (Exception e) {
+		std::cout << "Error running input\n";
+		std::cout << e.what() << std::endl;
+	}
+
+	// cleanup
+	for(Part* part : parts) {
+		delete part;
+	}
+}
