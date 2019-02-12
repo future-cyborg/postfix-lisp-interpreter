@@ -46,40 +46,46 @@ Part* add(vector<Part*> numbers) {
 Part* subtract(vector<Part*> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
-	num_t sum = 0;
-	for(Part* part : numbers) {
-		if(part->getType().compare("Number") != 0) {
+	if(numbers[0]->getType().compare("Number") != 0)
+		throw NotANumber();
+	num_t diff = std::stol(numbers[0]->getVal());
+	for(int i = 1; i < (int)numbers.size(); i++) {
+		if(numbers[i]->getType().compare("Number") != 0) {
 			throw NotANumber();
 		}
-		sum -= std::stol(part->getVal());
+		diff -= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(sum));
+	return new Number(std::to_string(diff));
 }
 
 Part* multiply(vector<Part*> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
-	num_t sum = 0;
-	for(Part* part : numbers) {
-		if(part->getType().compare("Number") != 0) {
+	if(numbers[0]->getType().compare("Number") != 0)
+		throw NotANumber();
+	num_t product = std::stol(numbers[0]->getVal());
+	for(int i = 1; i < (int)numbers.size(); i++) {
+		if(numbers[i]->getType().compare("Number") != 0) {
 			throw NotANumber();
 		}
-		sum *= std::stol(part->getVal());
+		product *= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(sum));
+	return new Number(std::to_string(product));
 }
 
 Part* divide(vector<Part*> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
-	num_t sum = 0;
-	for(Part* part : numbers) {
-		if(part->getType().compare("Number") != 0) {
+	if(numbers[0]->getType().compare("Number") != 0)
+		throw NotANumber();
+	num_t factor = std::stol(numbers[0]->getVal());
+	for(int i = 1; i < (int)numbers.size(); i++) {
+		if(numbers[i]->getType().compare("Number") != 0) {
 			throw NotANumber();
 		}
-		sum /= std::stol(part->getVal());
+		factor /= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(sum));
+	return new Number(std::to_string(factor));
 }
 
 Part* equal(vector<Part*> parts) {

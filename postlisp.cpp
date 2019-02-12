@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 			if(input.compare("exit") == 0) {
 				break;
 			}
-			std::cout << "|" << input << "|\n";
+			// std::cout << "|" << input << "|\n";
 			run(input);
 			std::cout << "postlisp: ";
 		}
