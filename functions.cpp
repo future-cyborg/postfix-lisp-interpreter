@@ -20,6 +20,16 @@ typedef unordered_map<string, Part*> command_map;
 command_map commands;
 primative_map primatives;
 
+// Part* doList(Part* part) {
+// 	// if not a list, return
+// 	if(part->getVal().compare("List") != 0) {
+// 		return part;
+// 	}
+// 	Part* result = part->evaluate();
+// 	delete part;
+// 	return result;
+// }
+
 Part* add(vector<Part*> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
@@ -227,6 +237,24 @@ Part* listEvaluate(std::string str) {
 		command = parts[0];
 	}
 
+	// if not quote, evaluate all subLists
+	if(command->getType().compare("Atom") == 0 &&
+			command->getVal().compare("quote") != 0) {
+
+		for(int i = 1; i < (int)parts.size(); i++) {
+			if(parts[i]->getType().compare("List") == 0) {
+				// get pointer to 
+				Part* oldList = parts[i];
+				Part* newPart = oldList->evaluate();
+				delete oldList;
+
+				parts[i] = newPart;
+
+			}
+		}
+	}
+
+
 	//check type of command
 	if(command->getType().compare("List") == 0) {
 		throw Exception("List is not callable");
@@ -260,7 +288,7 @@ Part* listEvaluate(std::string str) {
 	return result;
 }
 
-void run(std::string input) {
+void run(std::string &input) {
 	vector<Part*> parts;
 	try {
 		parts = parse(input);
@@ -273,7 +301,7 @@ void run(std::string input) {
 		}
 
 	} catch (Exception e) {
-		std::cout << "Error running input\n";
+		std::cout << "Error running input: ";
 		std::cout << e.what() << std::endl;
 	}
 

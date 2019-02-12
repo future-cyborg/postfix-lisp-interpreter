@@ -43,4 +43,4 @@ Part* callFunction(Part* command, std::vector<Part*> args);
 // Must free memory
 Part* listEvaluate(std::string str);
 
-void run(std::string input);
+void run(std::string &input);
