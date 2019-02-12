@@ -1,7 +1,7 @@
 # postfix-lisp-interpreter
 Interpreter for a post-fix style basic Lisp
 
-> ((2 3 *) dog define)
+> ((2 3 *) ((5 7 -) 1 +) *)
 
 
 #### Installation
