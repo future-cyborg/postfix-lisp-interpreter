@@ -243,6 +243,7 @@ Part* listEvaluate(std::string str) {
 		command = parts[0];
 	}
 
+
 	// if not quote, evaluate all subLists
 	if(command->getType().compare("Atom") == 0 &&
 			command->getVal().compare("quote") != 0) {
@@ -301,7 +302,8 @@ void run(std::string &input) {
 		for(Part* part : parts) {
 			if(part != nullptr) {
 				Part* value = part->evaluate();
-				std::cout << value->getVal() << std::endl;
+				if(value != nullptr)
+					std::cout << value->getVal() << std::endl;
 				delete value;
 			}
 		}

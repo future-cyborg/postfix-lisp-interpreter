@@ -114,11 +114,5 @@ std::string parseCdr(string str) {
 }
 
 
-Part* callFunction(Part* command, std::vector<Part*> args);
-
-// Must free memory
-Part* listEvaluate(std::string str);
-
-
 
 #endif
