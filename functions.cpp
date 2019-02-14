@@ -95,7 +95,7 @@ Part* equal(vector<Part*> parts) {
 		if(parts.at(n)->getType().compare(parts.at(0)->getType()) != 0) {
 			return new Atom("Flase");
 		}
-		if(parts.at(n) != parts.at(0)) {
+		if(parts.at(n)->getVal().compare(parts.at(0)->getVal()) != 0) {
 			return new Atom("False");
 		}
 	}
@@ -117,9 +117,9 @@ Part* quote(vector<Part*> parts) {
 	if((int)parts.size() == 0) throw MissingParamException();
 
 	for(Part* part : parts) {
-		std::cout << part->getVal();
+		std::cout << part->getVal() << ' ';
 	}
-	std::cout << std::flush;
+	std::cout << std::endl;
 	return nullptr;
 }
 
@@ -244,10 +244,17 @@ Part* listEvaluate(std::string str) {
 	}
 
 
-	// if not quote, evaluate all subLists
-	if(command->getType().compare("Atom") == 0 &&
-			command->getVal().compare("quote") != 0) {
+	// if not quote or lambda, evaluate all subLists
+	bool skip = false;
 
+	if(command->getType().compare("Atom") == 0) {
+		if(command->getVal().compare("quote") == 0 ||
+			command->getVal().compare("lambda") == 0) {
+			skip = true;
+		}
+	}
+	
+	if(!skip) {
 		for(int i = 1; i < (int)parts.size(); i++) {
 			if(parts[i]->getType().compare("List") == 0) {
 				// get pointer to 
@@ -257,6 +264,16 @@ Part* listEvaluate(std::string str) {
 
 				parts[i] = newPart;
 
+			}
+
+			if(parts[i]->getType().compare("Atom") == 0) {
+				if(commands.find(parts[i]->getVal()) != commands.end()) {
+					Part* oldPart = parts[i];
+					Part* newPart = commands[parts[i]->getVal()]->copy();
+					delete oldPart;
+
+					parts[i] = newPart;
+				}
 			}
 		}
 	}
