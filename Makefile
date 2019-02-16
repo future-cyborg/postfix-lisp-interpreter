@@ -10,13 +10,16 @@ TSTDIR  = test
 CMD     = $(CXX) $(CXXFLAGS) $(OPTIMIZE) -I$(INCDIR)
 CMDTEST = $(CMD) -I$(TSTDIR)
 
+BASE    = parse Part exceptions functions
+
 # Point this to location of cxxtest library
 TESTGEN = ~/cplusplus/cxxtest-4.3/bin/cxxtestgen
-TEST 	= Part
+TESTDEP	= $(BASE)
+TEST    = PartTypes
 
 
 
-BASE    = parse Part exceptions functions
+
 
 all: postlisp
 
@@ -35,6 +38,6 @@ clean:
 
 
 .PHONY: test
-test: $(patsubst %, $(TSTDIR)/Test%.hpp, $(TEST)) $(patsubst %, $(OBJDIR)/%.o, $(TEST))
+test: $(patsubst %, $(TSTDIR)/Test%.hpp, $(TEST)) $(patsubst %, $(OBJDIR)/%.o, $(TESTDEP))
 	$(TESTGEN) --error-printer -o $(TSTDIR)/RunTest.cpp $(patsubst %, $(TSTDIR)/Test%.hpp, $(TEST))
-	$(CMDTEST) -o runTest $(patsubst %, $(OBJDIR)/%.o, $(TEST)) $(TSTDIR)/RunTest.cpp
+	$(CMDTEST) -o runTest $(patsubst %, $(OBJDIR)/%.o, $(TESTDEP)) $(TSTDIR)/RunTest.cpp
