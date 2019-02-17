@@ -59,4 +59,16 @@ public:
   ~NotAnAtom( );
 };
 
+class CannotEvaluate : public Exception {
+public:
+   CannotEvaluate(const char* msg = "CannotEvaluate");
+  ~CannotEvaluate( );
+};
+
+class CannotCall : public Exception {
+public:
+   CannotCall(const char* msg = "CannotCall");
+  ~CannotCall( );
+};
+
 #endif

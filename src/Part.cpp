@@ -15,10 +15,10 @@ std::string Part::getType() {
     return "Part";
 }
 Part* Part::call(std::vector<Part*> args) {
-    throw NotALambda();
+    throw CannotCall("Part cannot be called");
 }
 Part* Part::evaluate(){
-    throw Exception("Part cannot be evaluated");
+    throw CannotEvaluate("Part cannot be evaluated");
 }
 Part* Part::copy() {
     throw Exception("Part cannot be copied");
@@ -35,7 +35,7 @@ std::string List::getType() {
 	return "List";
 }
 Part* List::call(std::vector<Part*> args) {
-    throw NotALambda();
+    throw CannotCall("List cannot be called");
 }
 Part* List::evaluate() {
     return listEvaluate(value);
@@ -57,10 +57,10 @@ std::string Atom::getType() {
     return "Atom";
 }
 Part* Atom::call(std::vector<Part*> args) {
-    throw NotALambda();
+    throw CannotCall("Atom cannot be called");
 }
 Part* Atom::evaluate() {
-    throw Exception("Atom cannot be evaluated");
+    throw CannotEvaluate("Atom cannot be evaluated");
 }
 Part* Atom::copy() {
     return new Atom(value);
@@ -93,10 +93,10 @@ std::string Number::getType() {
     return "Number";
 }
 Part* Number::call(std::vector<Part*> args) {
-    throw NotALambda();
+    throw CannotCall("Number cannot be called");
 }
 Part* Number::evaluate() {
-    throw Exception("Number cannot be evaluated");
+    throw CannotEvaluate("Number cannot be evaluated");
 }
 Part* Number::copy() {
     return new Number(value);
@@ -174,7 +174,7 @@ std::string Lambda::getType() {
 }
 
 Part* Lambda::evaluate(){
-    throw Exception("Lambda cannot be evaluated");
+    throw CannotEvaluate("Lambda cannot be evaluated");
 }
 Part* Lambda::copy(){
     return new Lambda(*this);

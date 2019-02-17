@@ -1,5 +1,5 @@
 CXX = g++ -std=c++11
-CXXFLAGS= -Wall -fmessage-length=0
+CXXFLAGS= -Wall -fmessage-length=0 -g
 OPTIMIZE= -O3 -fomit-frame-pointer
 
 SRCDIR  = src

@@ -33,3 +33,10 @@
 
 
 old/*
+test/cxxtest/*
+.clang_complete
+postlisp
+runTest
+
+
+.gdb_history

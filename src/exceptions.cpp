@@ -29,3 +29,9 @@ NotALambda::~NotALambda( ) {}
 
 NotAnAtom::NotAnAtom(const char* msg)  : Exception{msg} {}
 NotAnAtom::~NotAnAtom( ) {}
+
+CannotEvaluate::CannotEvaluate(const char* msg) : Exception{msg} {}
+CannotEvaluate::~CannotEvaluate( ) {}
+
+CannotCall::CannotCall(const char* msg) : Exception{msg} {}
+CannotCall::~CannotCall( ) {}

@@ -26,7 +26,7 @@ public:
 
 	void testCall(Part *part) {
 		if(part->getType().compare("Lambda") != 0) {
-			TS_ASSERT_THROWS(part->call(vector<Part*>()), NotALambda);
+			TS_ASSERT_THROWS(part->call(vector<Part*>()), CannotCall);
 		}
 	}
 
@@ -37,17 +37,17 @@ public:
 		}
 	}
 
-	// void testEvaluate(Part *part) {
-	// 	if(part->getType().compare("Lambda") != 0) {
+	void testEvaluate(Part *part) {
+		if(part->getType().compare("List") != 0) {
 
-	// 		TS_ASSERT_THROWS(part->call(vector<Part*>()), NotALambda);
-	// 	}
-	// }
+			TS_ASSERT_THROWS(part->evaluate(vector<Part*>()), CannotEvaluate);
+		}
+	}
 
-	// void testCallAll(void) {
-	// 	vector<Part *> allParts = getParts();
-	// 	for(Part *part : allParts) {
-	// 		testCall(part);
-	// 	}
-	// }
+	void testEvaluateAll(void) {
+		vector<Part *> allParts = getParts();
+		for(Part *part : allParts) {
+			testCall(part);
+		}
+	}
 };
