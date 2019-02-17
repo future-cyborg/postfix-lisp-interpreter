@@ -75,7 +75,7 @@ private:
 
 class Lambda : public Part {
 public:
-	Lambda(Part args, Part statement);
+	Lambda(Part* args, Part* statement);
 	Lambda(const Lambda &lambda);
 	~Lambda();
 	std::string getType();
@@ -88,7 +88,7 @@ private:
 	std::string value;
 	std::vector<Part*> argTemplates;
 	int numArgs = 0;
-	Part expression;
+	Part* expression;
 };
 
 

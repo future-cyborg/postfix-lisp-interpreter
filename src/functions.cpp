@@ -192,7 +192,7 @@ Part* lambda(vector<Part*> parts) {
 		throw Exception("lambda arguments must be lists");
 	}
 
-	return new Lambda(*parts[0], *parts[1]);
+	return new Lambda(parts[0], parts[1]);
 }
 
 void init() {

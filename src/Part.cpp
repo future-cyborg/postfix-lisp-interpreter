@@ -116,8 +116,8 @@ bool operator!= (const Number &n1, const Number &n2)
 
 
 
-Lambda::Lambda(Part args, Part statement) : expression {statement} {
-	std::vector<Part*> parts = parse(args.getVal());
+Lambda::Lambda(Part* args, Part* statement) : expression {statement->copy()} {
+	std::vector<Part*> parts = parse(args->getVal());
 	for(Part* part : parts) {
 		if(part->getType().compare("Atom") != 0) {
 			throw Exception("Lambda parameters can only contain Atoms");
@@ -136,10 +136,11 @@ Lambda::~Lambda() {
     for(int i = 0; i < (int)argTemplates.size(); i++) {
         delete argTemplates.at(i);
     }
+    delete expression;
 }
 
 Part* Lambda::call(std::vector<Part*> args) {
-	std::string exp(expression.getVal());
+	std::string exp(expression->getVal());
 	if((int)args.size() != numArgs) {
 		throw InvalidLambdaExpression("Wrong number of arguments to lambda");
 	}
