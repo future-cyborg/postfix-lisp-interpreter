@@ -47,6 +47,8 @@ bool isNumber(std::string value) {
  	return true;
 }
 
+
+// Returns vector of - List, Atom, Number
 std::vector<Part*> parse(string str) {
 	std::vector<Part*> parts;
 

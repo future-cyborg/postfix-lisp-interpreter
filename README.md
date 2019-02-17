@@ -4,18 +4,18 @@ Interpreter for a post-fix style basic Lisp
 > ((2 3 *) ((5 7 -) 1 +) *)
 
 
-#### Installation
+### Installation
 Use make to compile with g++ on linux machine.
 ```
 make
 ```
-#### Usage
+### Usage
 Call postlisp from command line with -i flag for repl mode. -h flag for help.
 ```
 ./postlisp -i
 ```
 
-##### Commands
+#### Commands
 Basic arithmetic commands can be used on numbers. Can take any number of inputs two or greater.
 ```
 ((2 3 4 8 9 +) ((2 4 /) 1 -) *)
@@ -64,10 +64,16 @@ define - Symbols can be defined to have a value, or a function (see lambda), and
 => 8
 ```
 
-lambda - Functions can be defined in place, or saved using define. [Currently defining lambdas works, but calling them does not].
+lambda - Functions can be defined in place, or saved using define.
 ```
-(((x x *) (x) lambda) square define)
+(2 ((x x *) (x) lambda))
+=> 4
+(4 sqM1) (((1 (x square) -) (x) lambda) sqM1 define) (((x x *) (x) lambda) square define)
+=> 15
+
 ```
 
-#### Credits
-The Lean Mean C++ Option Parser - optionparser.h
+## Acknowledgments 
+Helpful tools, thank you!
+- [The Lean Mean C++ Option Parser](http://optionparser.sourceforge.net/)
+- [CxxTest](http://cxxtest.com/)

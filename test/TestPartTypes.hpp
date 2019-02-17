@@ -16,7 +16,9 @@ public:
 		allParts.push_back(new List("list"));
 		allParts.push_back(new Atom("atom"));
 		allParts.push_back(new Number("num"));
-		allParts.push_back(new Lambda(Atom("x"), Atom("x x *")));
+		Part* arg = new Atom("x");
+		Part* exp = new Atom("x x *");
+		allParts.push_back(new Lambda(arg, exp));
 
 		return allParts;
 	}
@@ -40,7 +42,7 @@ public:
 	void testEvaluate(Part *part) {
 		if(part->getType().compare("List") != 0) {
 
-			TS_ASSERT_THROWS(part->evaluate(vector<Part*>()), CannotEvaluate);
+			TS_ASSERT_THROWS(part->evaluate(), CannotEvaluate);
 		}
 	}
 

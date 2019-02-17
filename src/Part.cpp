@@ -128,9 +128,14 @@ Lambda::Lambda(Part* args, Part* statement) : expression {statement->copy()} {
 }
 
 Lambda::Lambda(const Lambda &lambda) :
-    argTemplates(lambda.argTemplates),
     numArgs(lambda.numArgs),
-    expression(lambda.expression) {}
+    expression(lambda.expression->copy()) {
+        // argTemplates(lambda.argTemplates),
+        for(int argI = 0; argI < (int)lambda.argTemplates.size(); argI++) {
+            Part* arg = lambda.argTemplates[argI]->copy();
+            argTemplates.push_back(arg);
+        }
+    }
 
 Lambda::~Lambda() {
     for(int i = 0; i < (int)argTemplates.size(); i++) {
@@ -164,7 +169,10 @@ Part* Lambda::call(std::vector<Part*> args) {
 			
 		}
 	}
-	return new List(exp);
+    List* li = new List(exp);
+    Part* result = li->evaluate();
+    delete li;
+    return result;
 }
 
 std::string Lambda::getVal() {

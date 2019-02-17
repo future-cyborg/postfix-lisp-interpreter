@@ -88,7 +88,7 @@ private:
 	std::string value;
 	std::vector<Part*> argTemplates;
 	int numArgs = 0;
-	Part* expression;
+	Part* const expression;
 };
 
 

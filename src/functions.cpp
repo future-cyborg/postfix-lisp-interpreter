@@ -287,9 +287,7 @@ Part* listEvaluate(std::string str) {
 	} else if(command->getType().compare("Lambda") == 0) {
 
 		std::vector<Part*> args(parts.begin() + 1, parts.end());
-		Part* lambdaList = command->call(args);
-		result = lambdaList->evaluate();
-		delete lambdaList;
+		result = command->call(args);
 
 	} else if(command->getType().compare("Atom") == 0) {
 
