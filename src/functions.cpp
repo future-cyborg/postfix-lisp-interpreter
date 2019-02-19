@@ -4,31 +4,18 @@
 #include <cstdarg>
 #include <vector>
 #include "Part.hpp"
+#include "CommandMap.hpp"
 #include "exceptions.hpp"
 #include "parse.hpp"
 #include "functions.hpp"
+
 
 using std::string;
 using std::unordered_map;
 using std::vector;
 
 typedef long num_t;
-typedef Part* (*sexps)(vector<Part*>);
-typedef unordered_map<string, sexps> primative_map;
-typedef unordered_map<string, Part*> command_map;
 
-command_map commands;
-primative_map primatives;
-
-// Part* doList(Part* part) {
-// 	// if not a list, return
-// 	if(part->getVal().compare("List") != 0) {
-// 		return part;
-// 	}
-// 	Part* result = part->evaluate();
-// 	delete part;
-// 	return result;
-// }
 
 Part* add(vector<Part*> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
@@ -158,32 +145,9 @@ Part* cdr(vector<Part*> parts) {
 	return new List(parseCdr(parts[0]->getVal()));
 }
 
-Part* define(vector<Part*> parts) {
-	if((int)parts.size() != 2) throw Exception("define takes exactly 2 arguments");
-	if(parts[0]->getType().compare("Atom") != 0) {
-		throw Exception("define first argument must be an atom");
-	}
-	if(parts[1]->getType().compare("Atom") == 0) {
-		throw Exception("define second argument cannot be an atom");
-	}
 
-	Part* symbol = parts[0];
-	Part* value = parts[1];
-	// if symbol is a primative
-	if(primatives.find(symbol->getVal()) != primatives.end()) {
-		throw Exception("Cannot overwrite primative function");
-	}
-
-	// if overwriting symbol, free memory
-	if(commands.find(symbol->getVal()) != commands.end()) {
-		delete commands[symbol->getVal()];
-		commands[symbol->getVal()] = value->copy();
-	} else {
-		commands.insert(std::make_pair(symbol->getVal(), value->copy()));
-	}
-
-	return nullptr;
-}
+// Function moved to CommandMap class
+// Part* define(vector<Part*> parts) { }
 
 Part* lambda(vector<Part*> parts) {
 	if((int)parts.size() != 2) throw Exception("lambda takes exactly 2 arguments");
@@ -195,43 +159,37 @@ Part* lambda(vector<Part*> parts) {
 	return new Lambda(parts[0], parts[1]);
 }
 
-void init() {
-	primatives.emplace("+", &add);
-	primatives.emplace("-", &subtract);
-	primatives.emplace("/", &divide);
-	primatives.emplace("*", &multiply);
+CommandMap* init() {
+	CommandMap* cmap = new CommandMap();
 
-	primatives.emplace("eq?", &equal);
-	primatives.emplace("atom?", &isAtom);
-	primatives.emplace("quote", &quote);
+	cmap->addPrimative("+", &add);
+	cmap->addPrimative("-", &subtract);
+	cmap->addPrimative("/", &divide);
+	cmap->addPrimative("*", &multiply);
+
+	cmap->addPrimative("eq?", &equal);
+	cmap->addPrimative("atom?", &isAtom);
+	cmap->addPrimative("quote", &quote);
 	
-	primatives.emplace("cons", &cons);
-	primatives.emplace("car", &car);
-	primatives.emplace("cdr", &cdr);
+	cmap->addPrimative("cons", &cons);
+	cmap->addPrimative("car", &car);
+	cmap->addPrimative("cdr", &cdr);
 
-	primatives.emplace("define", &define);
-	primatives.emplace("lambda", &lambda);	
+	// cmap->addPrimative("define", &define);
+	cmap->addPrimative("lambda", &lambda);
+
+	return cmap;
 }
 
+CommandMap *commandmap = init();
 
-Part* callFunction(Part* command, std::vector<Part*> args) {
-	std::string symbol = command->getVal();
-	
-	// if exists as a primative
-	if(primatives.find(symbol) != primatives.end()) {
-		return (primatives[symbol])(args);
-	// if not primative, might be a command
-	} else if(commands.find(symbol) != commands.end()) {
 
-		return commands[symbol]->call(args);
-	// if not a command or primative
-	} else {
-		throw Exception("Command not defined");
-	}
+Part* listEvaluate(std::string str) {
+	return listEvaluate(str, *commandmap);
 }
 
 // Must free memory
-Part* listEvaluate(std::string str) {
+Part* listEvaluate(std::string str, CommandMap &cmap) {
 	std::vector<Part*> parts = parse(str);
 
 	Part* command;
@@ -247,6 +205,7 @@ Part* listEvaluate(std::string str) {
 	// if not quote or lambda, evaluate all subLists
 	bool skip = false;
 
+	// if quoting or lambda, we don't want to evaluate
 	if(command->getType().compare("Atom") == 0) {
 		if(command->getVal().compare("quote") == 0 ||
 			command->getVal().compare("lambda") == 0) {
@@ -256,6 +215,7 @@ Part* listEvaluate(std::string str) {
 	
 	if(!skip) {
 		for(int i = 1; i < (int)parts.size(); i++) {
+			// if it's a list, evaluate it
 			if(parts[i]->getType().compare("List") == 0) {
 				// get pointer to 
 				Part* oldList = parts[i];
@@ -266,13 +226,13 @@ Part* listEvaluate(std::string str) {
 
 			}
 
+			// if it's saved as a variable, expand it
 			if(parts[i]->getType().compare("Atom") == 0) {
-				if(commands.find(parts[i]->getVal()) != commands.end()) {
-					Part* oldPart = parts[i];
-					Part* newPart = commands[parts[i]->getVal()]->copy();
-					delete oldPart;
+				Part* newPart = cmap.getValue(parts[i]);
 
-					parts[i] = newPart;
+				if(newPart) {
+					delete parts[i];
+					parts[i] = newPart->copy();
 				}
 			}
 		}
@@ -292,7 +252,7 @@ Part* listEvaluate(std::string str) {
 	} else if(command->getType().compare("Atom") == 0) {
 
 		std::vector<Part*> args(parts.begin() + 1, parts.end());
-		result = callFunction(command, args);
+		result = cmap.callFunction(command, args);
 
 	} else {
 		throw Exception("Hmm, how'd you get here. Error in listEvaluate()");

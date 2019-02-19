@@ -1,4 +1,4 @@
-CXX = g++ -std=c++11
+CXX = g++ -std=c++14
 CXXFLAGS= -Wall -fmessage-length=0 -g
 OPTIMIZE= -O3 -fomit-frame-pointer
 
@@ -10,7 +10,7 @@ TSTDIR  = test
 CMD     = $(CXX) $(CXXFLAGS) $(OPTIMIZE) -I$(INCDIR)
 CMDTEST = $(CMD) -I$(TSTDIR)
 
-BASE    = parse Part exceptions functions
+BASE    = parse Part exceptions functions CommandMap
 
 # Point this to location of cxxtest library
 TESTGEN = ~/cplusplus/cxxtest-4.3/bin/cxxtestgen

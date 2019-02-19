@@ -4,6 +4,7 @@
 #include <cstdarg>
 #include <vector>
 #include "Part.hpp"
+#include "CommandMap.hpp"
 #include "exceptions.hpp"
 #include "parse.hpp"
 
@@ -35,12 +36,11 @@ Part* define(vector<Part*> parts);
 
 Part* lambda(vector<Part*> parts);
 
-void init();
+CommandMap* init();
 
-
-Part* callFunction(Part* command, std::vector<Part*> args);
 
 // Must free memory
 Part* listEvaluate(std::string str);
+Part* listEvaluate(std::string str, CommandMap &cmap);
 
 void run(std::string &input);
