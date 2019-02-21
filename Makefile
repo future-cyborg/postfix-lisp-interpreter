@@ -10,7 +10,7 @@ TSTDIR  = test
 CMD     = $(CXX) $(CXXFLAGS) $(OPTIMIZE) -I$(INCDIR)
 CMDTEST = $(CMD) -I$(TSTDIR)
 
-BASE    = parse Part exceptions functions CommandMap
+BASE    = parse Part exceptions functions CommandMap setup
 
 # Point this to location of cxxtest library
 TESTGEN = ~/cplusplus/cxxtest-4.3/bin/cxxtestgen

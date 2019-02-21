@@ -7,6 +7,7 @@
 #include "exceptions.hpp"
 #include "parse.hpp"
 #include "functions.hpp"
+#include "setup.hpp"
 #include "optionparser.h"
 #include <sys/ioctl.h>
 

@@ -36,11 +36,3 @@ Part* define(vector<Part*> parts);
 
 Part* lambda(vector<Part*> parts);
 
-CommandMap* init();
-
-
-// Must free memory
-Part* listEvaluate(std::string str);
-Part* listEvaluate(std::string str, CommandMap &cmap);
-
-void run(std::string &input);
