@@ -19,8 +19,10 @@ public:
 	virtual Part* call(std::vector<Part*> args);
 	virtual Part* evaluate();
 	virtual Part* copy();
+	// bool isType(std::string str);
 
-private:
+protected:
+	// std::string type;
 	std::string value = "PART";
 };
 
@@ -36,7 +38,7 @@ public:
 	bool shouldEvaluate();
 
 private:
-	std::string value;
+	// std::string value;
 	bool shouldEval = false;
 };
 
@@ -54,7 +56,7 @@ public:
     friend bool operator!= (const Atom &a1, const Atom &a2);
 
 private:
-	std::string value;
+	// std::string value;
 };
 
 
@@ -71,7 +73,7 @@ public:
     friend bool operator!= (const Number &n1, const Number &n2);
 
 private:
-	std::string value;
+	// std::string value;
 };
 
 
@@ -87,7 +89,7 @@ public:
 	Part* copy();
 
 private:
-	std::string value;
+	// std::string value;
 	std::vector<Part*> argTemplates;
 	int numArgs = 0;
 	Part* const expression;
