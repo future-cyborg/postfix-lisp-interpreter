@@ -5,9 +5,8 @@
 
 CommandMap* init();
 
-Part* listEvaluate(std::string str);
+Part_pt listEvaluate(std::string str);
 
-// Must free memory
-Part* listEvaluate(std::string str, CommandMap &cmap);
+Part_pt listEvaluate(std::string str, CommandMap &cmap);
 
 void run(std::string &input);

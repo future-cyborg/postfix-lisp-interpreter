@@ -23,7 +23,6 @@ bool isNumber(std::string value) {
 }
 
 size_t parseList(string &str, size_t start) {
-	//std::cout << "start: " << start << std::endl;
 	size_t prev = start, pos;
 	int stack = 0;
 	while( (pos = str.find_first_of(parens, prev)) != std::string::npos) {
@@ -48,20 +47,17 @@ size_t parseAtom(string &str, size_t start) {
 
 
 // Returns vector of - List, Atom, Number
-std::vector<Part*> parse(string str) {
-	std::vector<Part*> parts;
+std::vector<Part_pt> parse(string str) {
+	std::vector<Part_pt> parts;
 
 	size_t prev = 0, pos, end;
 	while( (pos = str.find_first_not_of(whitespaces, prev)) != std::string::npos) {
-		// std::cout << "prev: " << prev << '\n';
-		// std::cout << "pos: " << str.find_first_not_of(whitespaces, prev) << "|" << std::endl;
 		switch(str.at(pos)) {
 			case '(': {
 				end = parseList(str, pos + 1);
 				// make a list
-				parts.push_back(new List(str.substr(pos + 1, end - pos - 1)));
+				parts.push_back(std::make_shared<List>(str.substr(pos + 1, end - pos - 1)));
 
-				// std::cout << "list: " << str.substr(pos + 1, end - pos - 1) << "|" << std::endl;
 				break;
 			}
 			case ')': {
@@ -72,11 +68,10 @@ std::vector<Part*> parse(string str) {
 				// Make atom
 				std::string atom = str.substr(pos, end - pos);
 				if(isNumber(atom)) {
-					parts.push_back(new Number(atom));
+					parts.push_back(std::make_shared<Number>(atom));
 				} else {
-					parts.push_back(new Atom(atom));
+					parts.push_back(std::make_shared<Atom>(atom));
 				}
-				// std::cout << "atom: " << str.substr(pos, end - pos) << "|" << std::endl;;
 				break;
 			}
 		}

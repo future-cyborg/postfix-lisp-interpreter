@@ -36,7 +36,7 @@ size_t parseAtom(string &str, size_t start);
 /*
  *  parse() parses a string and returns vector of Parts
  */
-std::vector<Part*> parse(string str);
+std::vector<Part_pt> parse(string str);
 
 /*
  *	parseCar() returns the first element of a list (represented as a string)

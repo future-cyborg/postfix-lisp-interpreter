@@ -16,16 +16,24 @@ std::string Part::getVal() {
 std::string Part::getType() {
     return "Part";
 }
-Part* Part::call(std::vector<Part*> args) {
+Part_pt Part::call(std::vector<Part_pt> args) {
     throw CannotCall("Part cannot be called");
 }
-Part* Part::evaluate(){
+Part_pt Part::evaluate(){
     throw CannotEvaluate("Part cannot be evaluated");
 }
-Part* Part::copy() {
-    throw Exception("Part cannot be copied");
-}
 
+// bool Part::isType(std::string str) {
+//     size_t prev = 0, pos;
+//     while( (pos = type.find_first_of(":", prev)) != std::string::npos) {
+//         std::string t(type, prev, pos - prev);
+//         if(t.compare(str) == 0) return true;
+//         prev = pos + 1;
+//     }
+//     if(std::string(type, prev, pos - prev).compare(str) == 0) return true;
+
+//     return false;
+// }
 
 List::List(std::string v) {
     if(v.back() == '~') {
@@ -41,14 +49,11 @@ std::string List::getVal() {
 std::string List::getType() {
 	return "List";
 }
-Part* List::call(std::vector<Part*> args) {
+Part_pt List::call(std::vector<Part_pt> args) {
     throw CannotCall("List cannot be called");
 }
-Part* List::evaluate() {
+Part_pt List::evaluate() {
     return listEvaluate(value);
-}
-Part* List::copy() {
-    return new List(value);
 }
 bool List::shouldEvaluate() {
     return shouldEval;
@@ -65,14 +70,11 @@ std::string Atom::getVal() {
 std::string Atom::getType() {
     return "Atom";
 }
-Part* Atom::call(std::vector<Part*> args) {
+Part_pt Atom::call(std::vector<Part_pt> args) {
     throw CannotCall("Atom cannot be called");
 }
-Part* Atom::evaluate() {
+Part_pt Atom::evaluate() {
     throw CannotEvaluate("Atom cannot be evaluated");
-}
-Part* Atom::copy() {
-    return new Atom(value);
 }
 
 
@@ -101,14 +103,11 @@ std::string Number::getVal() {
 std::string Number::getType() {
     return "Number";
 }
-Part* Number::call(std::vector<Part*> args) {
+Part_pt Number::call(std::vector<Part_pt> args) {
     throw CannotCall("Number cannot be called");
 }
-Part* Number::evaluate() {
+Part_pt Number::evaluate() {
     throw CannotEvaluate("Number cannot be evaluated");
-}
-Part* Number::copy() {
-    return new Number(value);
 }
 
 
@@ -125,9 +124,9 @@ bool operator!= (const Number &n1, const Number &n2)
 
 
 
-Lambda::Lambda(Part* args, Part* statement) : expression {statement->copy()} {
-	std::vector<Part*> parts = parse(args->getVal());
-	for(Part* part : parts) {
+Lambda::Lambda(Part_pt args, Part_pt statement) : expression {statement} {
+	std::vector<Part_pt> parts = parse(args->getVal());
+	for(Part_pt part : parts) {
 		if(part->getType().compare("Atom") != 0) {
 			throw Exception("Lambda parameters can only contain Atoms");
 		}
@@ -138,22 +137,17 @@ Lambda::Lambda(Part* args, Part* statement) : expression {statement->copy()} {
 
 Lambda::Lambda(const Lambda &lambda) :
     numArgs(lambda.numArgs),
-    expression(lambda.expression->copy()) {
+    expression(lambda.expression) {
         // argTemplates(lambda.argTemplates),
         for(int argI = 0; argI < (int)lambda.argTemplates.size(); argI++) {
-            Part* arg = lambda.argTemplates[argI]->copy();
-            argTemplates.push_back(arg);
+            argTemplates.push_back(Part_pt(lambda.argTemplates[argI]));
         }
     }
 
 Lambda::~Lambda() {
-    for(int i = 0; i < (int)argTemplates.size(); i++) {
-        delete argTemplates.at(i);
-    }
-    delete expression;
 }
 
-Part* Lambda::call(std::vector<Part*> args) {
+Part_pt Lambda::call(std::vector<Part_pt> args) {
 	std::string exp(expression->getVal());
 	if((int)args.size() != numArgs) {
 		throw InvalidLambdaExpression("Wrong number of arguments to lambda");
@@ -179,7 +173,7 @@ Part* Lambda::call(std::vector<Part*> args) {
 		}
 	}
     List* li = new List(exp);
-    Part* result = li->evaluate();
+    Part_pt result = li->evaluate();
     delete li;
     return result;
 }
@@ -191,9 +185,6 @@ std::string Lambda::getType() {
     return "Lambda";
 }
 
-Part* Lambda::evaluate(){
+Part_pt Lambda::evaluate(){
     throw CannotEvaluate("Lambda cannot be evaluated");
-}
-Part* Lambda::copy(){
-    return new Lambda(*this);
 }

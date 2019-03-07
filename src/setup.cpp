@@ -1,6 +1,5 @@
 #include "setup.hpp"
 
-
 CommandMap* init() {
 	CommandMap* cmap = new CommandMap();
 
@@ -27,16 +26,16 @@ CommandMap* init() {
 CommandMap *commandmap = init();
 
 
-Part* listEvaluate(std::string str) {
+Part_pt listEvaluate(std::string str) {
 	return listEvaluate(str, *commandmap);
 }
 
 // Must free memory
-Part* listEvaluate(std::string str, CommandMap &cmap) {
-	std::vector<Part*> parts = parse(str);
+Part_pt listEvaluate(std::string str, CommandMap &cmap) {
+	std::vector<Part_pt> parts = parse(str);
 
-	Part* command;
-	Part* result = nullptr;
+	Part_pt command;
+	Part_pt result = nullptr;
 	// if first arg is a list
 	if(parts[0]->getType().compare("List") == 0) {
 		command = parts[0]->evaluate();
@@ -69,9 +68,7 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 			// if it's a list, evaluate it
 			if(parts[i]->getType().compare("List") == 0) {
 				// get pointer to 
-				Part* oldList = parts[i];
-				Part* newPart = oldList->evaluate();
-				delete oldList;
+				Part_pt newPart = parts[i]->evaluate();
 
 				parts[i] = newPart;
 
@@ -79,11 +76,10 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 
 			// if it's saved as a variable, expand it
 			if(parts[i]->getType().compare("Atom") == 0) {
-				Part* newPart = cmap.getValue(parts[i]);
+				Part_pt newPart = cmap.getValue(parts[i]);
 
 				if(newPart) {
-					delete parts[i];
-					parts[i] = newPart->copy();
+					parts[i] = newPart;
 				}
 			}
 		}
@@ -97,13 +93,12 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 		throw Exception("Number is not callable");
 	} else if(command->getType().compare("Lambda") == 0) {
 
-		// memory leak?
-		std::vector<Part*> args(parts.begin() + 1, parts.end());
+		std::vector<Part_pt> args(parts.begin() + 1, parts.end());
 		result = command->call(args);
 
 	} else if(command->getType().compare("Atom") == 0) {
 
-		std::vector<Part*> args(parts.begin() + 1, parts.end());
+		std::vector<Part_pt> args(parts.begin() + 1, parts.end());
 		result = cmap.callFunction(command, args);
 
 	} else {
@@ -111,47 +106,31 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 	}
 
 	while(result != nullptr && result->getType().compare("List") == 0) {
-		List* l = dynamic_cast<List*>(result);
+		List_pt l = std::dynamic_pointer_cast<List>(result);
 		if(l->shouldEvaluate()) {
-			Part* newResult = l->evaluate();
-			delete result;
-			result = newResult;
+			result = l->evaluate();
 		} else {
 			break;
 		}
-	}
-
-	// Free memory
-	if(parts[0]->getType().compare("List") == 0) {
-		delete command;
-	}
-	for(Part* part : parts) {
-		delete part;
 	}
 
 	return result;
 }
 
 void run(std::string &input) {
-	vector<Part*> parts;
+	vector<Part_pt> parts;
 	try {
 		parts = parse(input);
-		for(Part* part : parts) {
+		for(Part_pt part : parts) {
 			if(part != nullptr) {
-				Part* value = part->evaluate();
+				Part_pt value = part->evaluate();
 				if(value != nullptr)
 					std::cout << value->getVal() << std::endl;
-				delete value;
 			}
 		}
 
 	} catch (Exception e) {
 		std::cout << "Error running input: ";
 		std::cout << e.what() << std::endl;
-	}
-
-	// cleanup
-	for(Part* part : parts) {
-		delete part;
 	}
 }

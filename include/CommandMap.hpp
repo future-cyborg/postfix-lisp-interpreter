@@ -13,9 +13,9 @@ using std::string;
 
 
 
-typedef Part* (*sexps)(vector<Part*>);
+typedef Part_pt (*sexps)(vector<Part_pt>);
 typedef unordered_map<string, sexps> primative_map;
-typedef unordered_map<string, Part*> command_map;
+typedef unordered_map<string, Part_pt> command_map;
 
 /**
  * 	CommandMap contains and manages all symbols that can be resolved.
@@ -39,7 +39,7 @@ public:
 	/*
 	 * 	getValue() returns the value of a user-defined symbol 
 	 */
-	Part* getValue(Part* symbol) const;
+	Part_pt getValue(Part_pt symbol) const;
 
 	/*
 	 * 	callFunction() is used both to define symbols and execute functions.
@@ -51,14 +51,14 @@ public:
 	 * 		a lambda. User-defined symbols that resolve to non-lambdas 
 	 *		will throw an Exception.
 	 */
-	Part* callFunction(Part* command, vector<Part*> args);
+	Part_pt callFunction(Part_pt command, vector<Part_pt> args);
 
 
 private:
 	command_map commands;
 	primative_map primatives;
 
-	Part* define(vector<Part*> parts);
+	Part_pt define(vector<Part_pt> parts);
 
 };
 

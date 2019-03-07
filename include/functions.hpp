@@ -16,30 +16,30 @@ using std::vector;
  * 	Math fsymbols currently only support number types. No function overloade=ing.
  */
 
-Part* add(vector<Part*> numbers);
+Part_pt add(vector<Part_pt> numbers);
 
-Part* subtract(vector<Part*> numbers);
+Part_pt subtract(vector<Part_pt> numbers);
 
-Part* multiply(vector<Part*> numbers);
+Part_pt multiply(vector<Part_pt> numbers);
 
-Part* divide(vector<Part*> numbers);
+Part_pt divide(vector<Part_pt> numbers);
 
 
 
-Part* equal(vector<Part*> parts);
+Part_pt equal(vector<Part_pt> parts);
 
-Part* isAtom(vector<Part*> parts);
+Part_pt isAtom(vector<Part_pt> parts);
 
-Part* quote(vector<Part*> parts);
+Part_pt quote(vector<Part_pt> parts);
 
-Part* cons(vector<Part*> parts);
+Part_pt cons(vector<Part_pt> parts);
 
-Part* car(vector<Part*> parts);
+Part_pt car(vector<Part_pt> parts);
 
-Part* cdr(vector<Part*> parts);
+Part_pt cdr(vector<Part_pt> parts);
 
-Part* define(vector<Part*> parts);
+Part_pt define(vector<Part_pt> parts);
 
-Part* lambda(vector<Part*> parts);
+Part_pt lambda(vector<Part_pt> parts);
 
-Part* condition(vector<Part*> parts);
+Part_pt condition(vector<Part_pt> parts);

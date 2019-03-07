@@ -17,20 +17,20 @@ using std::vector;
 typedef long num_t;
 
 
-Part* add(vector<Part*> numbers) {
+Part_pt add(vector<Part_pt> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
 	num_t sum = 0;
-	for(Part* part : numbers) {
+	for(Part_pt part : numbers) {
 		if(part->getType().compare("Number") != 0) {
 			throw NotANumber();
 		}
 		sum += std::stol(part->getVal());
 	}
-	return new Number(std::to_string(sum));
+	return std::make_shared<Number>(std::to_string(sum));
 }
 
-Part* subtract(vector<Part*> numbers) {
+Part_pt subtract(vector<Part_pt> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
 	if(numbers[0]->getType().compare("Number") != 0)
@@ -42,10 +42,10 @@ Part* subtract(vector<Part*> numbers) {
 		}
 		diff -= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(diff));
+	return std::make_shared<Number>(std::to_string(diff));
 }
 
-Part* multiply(vector<Part*> numbers) {
+Part_pt multiply(vector<Part_pt> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
 	if(numbers[0]->getType().compare("Number") != 0)
@@ -57,10 +57,10 @@ Part* multiply(vector<Part*> numbers) {
 		}
 		product *= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(product));
+	return std::make_shared<Number>(std::to_string(product));
 }
 
-Part* divide(vector<Part*> numbers) {
+Part_pt divide(vector<Part_pt> numbers) {
 	if(numbers.size() == 0) throw MissingParamException();
 
 	if(numbers[0]->getType().compare("Number") != 0)
@@ -72,55 +72,55 @@ Part* divide(vector<Part*> numbers) {
 		}
 		factor /= std::stol(numbers[i]->getVal());
 	}
-	return new Number(std::to_string(factor));
+	return std::make_shared<Number>(std::to_string(factor));
 }
 
-Part* equal(vector<Part*> parts) {
+Part_pt equal(vector<Part_pt> parts) {
 	if((int)parts.size() < 2) throw MissingParamException();
 
 	for(int n = 1; n < (int)parts.size(); ++n) {
 		if(parts.at(n)->getType().compare(parts.at(0)->getType()) != 0) {
-			return new Atom("Flase");
+			return std::make_shared<Atom>("Flase");
 		}
 		if(parts.at(n)->getVal().compare(parts.at(0)->getVal()) != 0) {
-			return new Atom("False");
+			return std::make_shared<Atom>("False");
 		}
 	}
-	return new Atom("True");
+	return std::make_shared<Atom>("True");
 }
 
-Part* isAtom(vector<Part*> parts) {
+Part_pt isAtom(vector<Part_pt> parts) {
 	if((int)parts.size() == 0) throw MissingParamException();
 
 	for(int n = 0; n < (int)parts.size(); ++n) {
 		if(parts.at(n)->getType().compare("Atom") != 0) {
-			return new Atom("False");
+			return std::make_shared<Atom>("False");
 		}
 	}
-	return new Atom("True");
+	return std::make_shared<Atom>("True");
 }
 
-Part* quote(vector<Part*> parts) {
+Part_pt quote(vector<Part_pt> parts) {
 	if((int)parts.size() == 0) throw MissingParamException();
 
-	for(Part* part : parts) {
+	for(Part_pt part : parts) {
 		std::cout << part->getVal() << ' ';
 	}
 	std::cout << std::endl;
 	return nullptr;
 }
 
-Part* cons(vector<Part*> parts) {
+Part_pt cons(vector<Part_pt> parts) {
 	if((int)parts.size() != 2) throw Exception("cons takes exactly 2 arguments");
 
 	std::string newStr = parts[0]->getVal();
 	newStr.append(" ");
 	newStr.append(parts[1]->getVal());
 
-	return new List(newStr);
+	return std::make_shared<List>(newStr);
 }
 
-Part* car(vector<Part*> parts) {
+Part_pt car(vector<Part_pt> parts) {
 	if((int)parts.size() != 1) throw Exception("car takes exactly 1 argument");
 	if(parts[0]->getType().compare("List") != 0)
 		throw Exception("Function car only works on a List");
@@ -128,73 +128,66 @@ Part* car(vector<Part*> parts) {
 	std::string newStr = parseCar(parts[0]->getVal());
 
 	if(newStr.size() == 0) throw Exception("car error");
-	if(newStr[0] == '(') return new List(newStr);
+	if(newStr[0] == '(') return std::make_shared<List>(newStr);
 
 	if(isNumber(newStr)) {
-		return new Number(newStr);
+		return std::make_shared<Number>(newStr);
 	} else {
-		return new Atom(newStr);
+		return std::make_shared<Atom>(newStr);
 	}
 }
 
-Part* cdr(vector<Part*> parts) {
+Part_pt cdr(vector<Part_pt> parts) {
 	if((int)parts.size() != 1) throw Exception("cdr takes exactly 1 argument");
 	if(parts[0]->getType().compare("List") != 0)
 		throw Exception("Function cdr only works on a List");
 
-	return new List(parseCdr(parts[0]->getVal()));
+	return std::make_shared<List>(parseCdr(parts[0]->getVal()));
 }
 
 
 // Function moved to CommandMap class
-// Part* define(vector<Part*> parts) { }
+// Part_pt define(vector<Part_pt> parts) { }
 
-Part* lambda(vector<Part*> parts) {
+Part_pt lambda(vector<Part_pt> parts) {
 	if((int)parts.size() != 2) throw Exception("lambda takes exactly 2 arguments");
 	if(parts[0]->getType().compare("List") != 0   ||
 			parts[1]->getType().compare("List") != 0) {
 		throw Exception("lambda arguments must be lists");
 	}
 
-	return new Lambda(parts[0], parts[1]);
+	return std::make_shared<Lambda>(parts[0], parts[1]);
 }
 
 
-Part* condition(vector<Part*> parts) {
+Part_pt condition(vector<Part_pt> parts) {
 	// Check if each part is a list
-	Part* result = nullptr;
+	Part_pt result = nullptr;
 	for(int i = 0; i < (int)parts.size() - 1; i++) {
 		if(parts[i]->getType().compare("List") != 0) {
-			// std::cout << parts[i]->getVal() << '\n';
 			throw Exception("Condition cases must be lists");
 		}
 
 
-		std::vector<Part*> subParts = parse(parts[i]->getVal());
+		std::vector<Part_pt> subParts = parse(parts[i]->getVal());
 		if(subParts.size() != 2) {
 			throw Exception("Condition cases must only have 2 parts");
 		}
 		if(subParts[0]->getType().compare("List") != 0) {
-			std::cout << subParts[0]->getType() << std::endl;
 			throw Exception("First arguement of condition cases must be a list");
 		}
 
-		Part* boolean = subParts[0]->evaluate();
+		Part_pt boolean = subParts[0]->evaluate();
 		if(boolean->getType().compare("Atom") == 0
 				&& boolean->getVal().compare("True") == 0) {
 			result = subParts[1];
-			delete subParts[0];
 			break;
-		}
-		for(int s = 0; s < (int)subParts.size(); s++) {
-			delete subParts[s];
 		}
 
 	}
 	if(result == nullptr) {
-		std::vector<Part*> subParts = parse(parts[parts.size() - 1]->getVal());
+		std::vector<Part_pt> subParts = parse(parts[parts.size() - 1]->getVal());
 		result = subParts[1];
-		delete subParts[0];
 	}
 	return result;
 }
