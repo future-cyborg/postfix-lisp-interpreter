@@ -20,7 +20,7 @@ typedef unordered_map<string, Part*> command_map;
 /**
  * 	CommandMap contains and manages all symbols that can be resolved.
  * 
- * 	Primitive functions are defined programmatically before compilation
+ * 	Primitive functions are defined programamtically before compilation
  * 		and stored in primative_map.
  * 	User defined symbols and functions are stored as Parts in command_map.
  *

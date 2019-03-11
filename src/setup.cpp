@@ -19,6 +19,7 @@ CommandMap* init() {
 
 	// cmap->addPrimative("define", &define);
 	cmap->addPrimative("lambda", &lambda);
+	cmap->addPrimative("cond", &condition);
 
 	return cmap;
 }
@@ -50,11 +51,19 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 	// if quoting or lambda, we don't want to evaluate
 	if(command->getType().compare("Atom") == 0) {
 		if(command->getVal().compare("quote") == 0 ||
-			command->getVal().compare("lambda") == 0) {
+			command->getVal().compare("lambda") == 0 ||
+			command->getVal().compare("cond") == 0) {
 			skip = true;
 		}
 	}
 	
+	// Check if atom, check if 'cond'
+	// call cond function
+
+	// replace part with condEvaluate() results
+	// 	similar to oldList, newPart below
+	// 
+
 	if(!skip) {
 		for(int i = 1; i < (int)parts.size(); i++) {
 			// if it's a list, evaluate it
@@ -88,6 +97,7 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 		throw Exception("Number is not callable");
 	} else if(command->getType().compare("Lambda") == 0) {
 
+		// memory leak?
 		std::vector<Part*> args(parts.begin() + 1, parts.end());
 		result = command->call(args);
 
@@ -100,6 +110,16 @@ Part* listEvaluate(std::string str, CommandMap &cmap) {
 		throw Exception("Hmm, how'd you get here. Error in listEvaluate()");
 	}
 
+	while(result != nullptr && result->getType().compare("List") == 0) {
+		List* l = dynamic_cast<List*>(result);
+		if(l->shouldEvaluate()) {
+			Part* newResult = l->evaluate();
+			delete result;
+			result = newResult;
+		} else {
+			break;
+		}
+	}
 
 	// Free memory
 	if(parts[0]->getType().compare("List") == 0) {

@@ -1,9 +1,11 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include "exceptions.hpp"
 #include "Part.hpp"
 #include "parse.hpp"
+#include "setup.hpp"
 
 
 Part::~Part () {};
@@ -26,7 +28,12 @@ Part* Part::copy() {
 
 
 List::List(std::string v) {
-	value = v;
+    if(v.back() == '~') {
+        shouldEval = true;
+        value.assign(v.begin(), v.end() - 1);
+    } else {
+        value = v;
+    }
 }
 std::string List::getVal() {
     return value;
@@ -43,7 +50,9 @@ Part* List::evaluate() {
 Part* List::copy() {
     return new List(value);
 }
-
+bool List::shouldEvaluate() {
+    return shouldEval;
+}
 
 Atom::Atom(std::string v) {
  	value = v;

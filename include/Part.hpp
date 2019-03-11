@@ -33,9 +33,11 @@ public:
 	Part* call(std::vector<Part*> args);
 	Part* evaluate();
 	Part* copy();
+	bool shouldEvaluate();
 
 private:
 	std::string value;
+	bool shouldEval = false;
 };
 
 

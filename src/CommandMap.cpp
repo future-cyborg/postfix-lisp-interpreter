@@ -37,7 +37,8 @@ Part* CommandMap::callFunction(Part* command, vector<Part*> args) {
 		return commands[symbol]->call(args);
 	// if not a command or primative
 	} else {
-		throw Exception("Command not defined");
+		std::cout << symbol << '\n';
+		throw Exception(symbol.c_str());
 	}
 }
 

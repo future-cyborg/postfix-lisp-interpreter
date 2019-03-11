@@ -42,3 +42,4 @@ Part* define(vector<Part*> parts);
 
 Part* lambda(vector<Part*> parts);
 
+Part* condition(vector<Part*> parts);

@@ -158,3 +158,43 @@ Part* lambda(vector<Part*> parts) {
 
 	return new Lambda(parts[0], parts[1]);
 }
+
+
+Part* condition(vector<Part*> parts) {
+	// Check if each part is a list
+	Part* result = nullptr;
+	for(int i = 0; i < (int)parts.size() - 1; i++) {
+		if(parts[i]->getType().compare("List") != 0) {
+			// std::cout << parts[i]->getVal() << '\n';
+			throw Exception("Condition cases must be lists");
+		}
+
+
+		std::vector<Part*> subParts = parse(parts[i]->getVal());
+		if(subParts.size() != 2) {
+			throw Exception("Condition cases must only have 2 parts");
+		}
+		if(subParts[0]->getType().compare("List") != 0) {
+			std::cout << subParts[0]->getType() << std::endl;
+			throw Exception("First arguement of condition cases must be a list");
+		}
+
+		Part* boolean = subParts[0]->evaluate();
+		if(boolean->getType().compare("Atom") == 0
+				&& boolean->getVal().compare("True") == 0) {
+			result = subParts[1];
+			delete subParts[0];
+			break;
+		}
+		for(int s = 0; s < (int)subParts.size(); s++) {
+			delete subParts[s];
+		}
+
+	}
+	if(result == nullptr) {
+		std::vector<Part*> subParts = parse(parts[parts.size() - 1]->getVal());
+		result = subParts[1];
+		delete subParts[0];
+	}
+	return result;
+}
