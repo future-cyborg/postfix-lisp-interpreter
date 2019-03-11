@@ -13,6 +13,14 @@
 using std::string;
 using std::stringstream;
 
+bool isNumber(std::string value) {
+	for(char ch : value) {
+ 		if(!isdigit(ch)) {
+ 			return false;
+ 		}
+ 	}
+ 	return true;
+}
 
 size_t parseList(string &str, size_t start) {
 	//std::cout << "start: " << start << std::endl;
@@ -38,15 +46,6 @@ size_t parseAtom(string &str, size_t start) {
 	return str.find_first_of(whiteParen, start);
 }
 
-bool isNumber(std::string value) {
-	for(char ch : value) {
- 		if(!isdigit(ch)) {
- 			return false;
- 		}
- 	}
- 	return true;
-}
-
 
 // Returns vector of - List, Atom, Number
 std::vector<Part*> parse(string str) {
@@ -69,7 +68,7 @@ std::vector<Part*> parse(string str) {
 				throw UnmatchingParenthesis();
 			}
 			default: {
-				end = parseAtom(str, pos + 1);
+				end = parseAtom(str, pos);
 				// Make atom
 				std::string atom = str.substr(pos, end - pos);
 				if(isNumber(atom)) {
@@ -94,9 +93,9 @@ std::string parseCar(string str) {
 	if(pos == std::string::npos) throw Exception("parseCar error");
 
 	if(str.at(pos) == '(') {
-		end = parseList(str, pos + 1);
+		end = parseList(str, pos);
 	} else {
-		end = parseAtom(str, pos + 1);
+		end = parseAtom(str, pos);
 	}
 	return str.substr(pos, end - pos);
 }
@@ -107,9 +106,9 @@ std::string parseCdr(string str) {
 	if(pos == std::string::npos) throw Exception("parseCar error");
 
 	if(str.at(pos) == '(') {
-		end = parseList(str, pos + 1);
+		end = parseList(str, pos);
 	} else {
-		end = parseAtom(str, pos + 1);
+		end = parseAtom(str, pos);
 	}
 	pos = str.find_first_not_of(whitespaces, end + 1);
 	return str.substr(pos);
