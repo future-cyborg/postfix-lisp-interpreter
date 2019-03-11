@@ -12,6 +12,10 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
+/*
+ * 	Math fsymbols currently only support number types. No function overloade=ing.
+ */
+
 Part* add(vector<Part*> numbers);
 
 Part* subtract(vector<Part*> numbers);
@@ -19,6 +23,8 @@ Part* subtract(vector<Part*> numbers);
 Part* multiply(vector<Part*> numbers);
 
 Part* divide(vector<Part*> numbers);
+
+
 
 Part* equal(vector<Part*> parts);
 
